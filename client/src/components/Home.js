@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectSearchText } from "./Navbar/navbarSlice";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useNavigate } from "react-router-dom";
-import searchIcon from "../components/assets/icons/search.svg";
+
 const Home = () => {
   const [apiData, setApiData] = useState([]);
-  const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
+  const searchText = useSelector(selectSearchText);
 
   useEffect(() => {
-    fetch("https://api.tvmaze.com/shows")
-      .then((res) => res.json())
-      .then((response) => setApiData(response));
-  }, []);
-
-  useEffect(() => {
-    if (searchText)
+    if (!searchText)
+      fetch("https://api.tvmaze.com/shows")
+        .then((res) => res.json())
+        .then((response) => setApiData(response));
+    else
       fetch(`https://api.tvmaze.com/search/shows?q=${searchText}`)
         .then((res) => res.json())
         .then((response) => {
-          console.log("response");
           setApiData(response.map((item) => item.show));
         });
   }, [searchText]);
-  console.log("apiData", apiData);
 
   var settings = {
     dots: false,
@@ -32,71 +30,29 @@ const Home = () => {
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 5,
-    // centerMode: true,
-    // autoplay: true,
-    // autoplaySpeed: 2000,
-    // cssEase: "linear",
   };
 
-  const getGeneresList = () => {
-    let generesList = [];
-    const generesArray = apiData?.map((data) => data.genres);
-    generesArray.forEach((item) => {
-      item?.map((each) => generesList.push(each));
+  const getGenresList = () => {
+    let genresList = [];
+    const genresArray = apiData?.map((data) => data.genres);
+    genresArray.forEach((item) => {
+      item?.map((each) => genresList.push(each));
     });
-    return [...new Set(generesList)];
+    return [...new Set(genresList)];
   };
-  const genresList = getGeneresList();
+  const genresList = getGenresList();
   return (
     <div style={{ backgroundColor: "#d8d8d8" }}>
-      <div
-        style={{
-          display: "flex",
-          height: "70px",
-          backgroundColor: "#d8d8d8",
-          padding: "5px",
-          flexDirection: "column",
-          borderBottom: "5px solid black",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "24px",
-            display: "flex",
-            justifyContent: "flex-start",
-            marginLeft: "10px",
-            alignContent: "center",
-            marginTop: "15px",
-          }}
-        >
-          TV MAZE
-        </div>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <img
-              src={searchIcon}
-              width={25}
-              height={25}
-              style={{ marginRight: "8px" }}
-              alt="searchIcon"
-            />
-            <input
-              type="text"
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
       <div style={{ padding: "20px" }}>
-        {genresList.map((generItem) => {
+        {genresList?.map((genreItem) => {
           return (
-            <div>
-              <h1>{generItem}</h1>
+            <div key={genreItem}>
+              <h1>{genreItem}</h1>
               <Slider {...settings}>
                 {apiData.map((item) => {
-                  if (item.genres.includes(generItem)) {
+                  if (item.genres.includes(genreItem)) {
                     return (
-                      <div style={{ backgroundColor: "green" }}>
+                      <div style={{ backgroundColor: "green" }} key={item.id}>
                         <img
                           src={item?.image?.medium}
                           onClick={() => navigate(`${item.id}/detail`)}
