@@ -37,10 +37,6 @@ const Home = () => {
     // autoplaySpeed: 2000,
     // cssEase: "linear",
   };
-  // const generesArray = apiData?.map((data) => data.genres);
-  // console.log("generes", generesArray);
-  // const generesList = generesArray.map((item) => item.map((item) => item));
-  // console.log("generesList", generesList);
 
   const getGeneresList = () => {
     let generesList = [];
@@ -48,32 +44,41 @@ const Home = () => {
     generesArray.forEach((item) => {
       item?.map((each) => generesList.push(each));
     });
-    console.log("generesList", generesList);
     return [...new Set(generesList)];
-    //  generesArray.map((item) => item.map((item) => item));
   };
   const genresList = getGeneresList();
-  console.log("genresList", genresList);
   return (
-    <div style={{ backgroundColor: "green" }}>
+    <div style={{ backgroundColor: "#d8d8d8" }}>
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
           height: "70px",
-          backgroundColor: "red",
-          alignItems: "center",
+          backgroundColor: "#d8d8d8",
           padding: "5px",
+          flexDirection: "column",
+          borderBottom: "5px solid black",
         }}
       >
-        <div style={{ fontSize: "24px" }}>TV MAZE</div>
-        <div>
+        <div
+          style={{
+            fontSize: "24px",
+            display: "flex",
+            justifyContent: "flex-start",
+            marginLeft: "10px",
+            alignContent: "center",
+            marginTop: "15px",
+          }}
+        >
+          TV MAZE
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <div style={{ display: "flex", alignItems: "center" }}>
             <img
               src={searchIcon}
               width={25}
               height={25}
               style={{ marginRight: "8px" }}
+              alt="searchIcon"
             />
             <input
               type="text"
@@ -82,61 +87,31 @@ const Home = () => {
           </div>
         </div>
       </div>
-      {/* {apiData.map((item) => {
-        return <img src={item.image.medium} />;
-      })} */}
-      {genresList.map((generItem) => {
-        return (
-          <div>
-            <h1>{generItem}</h1>
-            <Slider {...settings}>
-              {apiData.map((item) => {
-                if (item.genres.includes(generItem)) {
-                  console.log("res", generItem === "Music" ? item : "");
-                  return (
-                    <div
-                      // onClick={() => navigate(`${item.id}/detail`)}
-                      style={{ backgroundColor: "gray" }}
-                    >
-                      <img src={item?.image?.medium} />
-                    </div>
-                  );
-                }
-              })}
-            </Slider>
-          </div>
-        );
-      })}
-      {/* <Slider {...settings}>
-        {apiData.map((item) => {
+      <div style={{ padding: "20px" }}>
+        {genresList.map((generItem) => {
           return (
-            <div
-              onClick={() => navigate(`${item.id}/detail`)}
-              style={{ backgroundColor: "red" }}
-            >
-              <img src={item.image.medium} />
+            <div>
+              <h1>{generItem}</h1>
+              <Slider {...settings}>
+                {apiData.map((item) => {
+                  if (item.genres.includes(generItem)) {
+                    return (
+                      <div style={{ backgroundColor: "green" }}>
+                        <img
+                          src={item?.image?.medium}
+                          onClick={() => navigate(`${item.id}/detail`)}
+                          alt="showPoster"
+                        />
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </Slider>
             </div>
           );
         })}
-        <div>
-          <h3>1</h3>
-        </div>
-        <div>
-          <h3>2</h3>
-        </div>
-        <div>
-          <h3>3</h3>
-        </div>
-        <div>
-          <h3>4</h3>
-        </div>
-        <div>
-          <h3>5</h3>
-        </div>
-        <div>
-          <h3>6</h3>
-        </div>
-      </Slider> */}
+      </div>
     </div>
   );
 };
