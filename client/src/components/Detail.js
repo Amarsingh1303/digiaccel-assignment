@@ -12,15 +12,9 @@ const Detail = () => {
     fetch(`https://api.tvmaze.com/shows/${params.id}`)
       .then((res) => res.json())
       .then((response) => setShowDetail(response));
-  }, [params.id]);
-
-  useEffect(() => {
     fetch(`https://api.tvmaze.com/shows/${params.id}/cast`)
       .then((res) => res.json())
       .then((response) => setCastDetails(response));
-  }, [params.id]);
-
-  useEffect(() => {
     fetch(`https://api.tvmaze.com/shows/${params.id}/crew`)
       .then((res) => res.json())
       .then((response) => setCrewDetails(response));
@@ -46,13 +40,13 @@ const Detail = () => {
             {new Date(showDetail.premiered).getFullYear()} |{showDetail.runtime}
             min |
             {crewDetails.length > 0 &&
-              crewDetails?.find((item) => item.type === "Producer")?.person
+              crewDetails?.find((crew) => crew.type === "Producer")?.person
                 .name}
           </div>
           <div>
             Cast :
-            {castDetails.slice(0, 3).map((item) => (
-              <span> {item.person.name}, </span>
+            {castDetails.slice(0, 3).map((cast) => (
+              <span key={cast.person.id}> {cast.person.name}, </span>
             ))}
           </div>
           <div style={{ marginTop: "20px" }}>{showDetail.summary}</div>
