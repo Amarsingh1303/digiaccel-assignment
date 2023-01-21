@@ -22,7 +22,7 @@ const Detail = () => {
 
   return (
     <>
-      <div className="container">
+      <div style={{ display: "flex", height: "80vh" }}>
         <div className="left">
           <div className="imgContainer">
             <img

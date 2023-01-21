@@ -1,9 +1,31 @@
 const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const userRouter = require("./routes/userRoutes");
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+require("dotenv").config();
 
-app.get("/", (req, res) => {
-  res.json({ status: "ok" });
+app.use(cors());
+app.use(express.json());
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGOURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+mongoose.connection.on("connected", () => {
+  console.log("mongo db connected with DB");
 });
 
-app.listen(PORT, () => console.log("server running on PORT 5000"));
+mongoose.connection.on("error", () => {
+  console.log("error occured while connection to database");
+});
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
+
+app.use(userRouter);
+
+app.listen(PORT, () => {
+  console.log("server running on port " + PORT);
+});

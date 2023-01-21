@@ -9,7 +9,7 @@ const Navbar = () => {
     <div
       style={{
         display: "flex",
-        height: "70px",
+        height: "100px",
         backgroundColor: "#d8d8d8",
         padding: "5px",
         flexDirection: "column",
